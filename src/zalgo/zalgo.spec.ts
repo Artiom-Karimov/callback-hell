@@ -22,10 +22,9 @@ describe('File read operations', () => {
     });
   });
 
+  let results: string[] | undefined;
   test('Read 2 files', (done) => {
     const files = [path1, path2];
-
-    let results = new Array<string>();
 
     files.forEach((file) => {
       zalgo.read(file, (err, result) => {

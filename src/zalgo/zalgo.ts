@@ -13,12 +13,21 @@ export function read(
 export class ZalgoReader {
   private readonly cache: { [path: string]: string } = {};
 
+  public async promiseRead(path: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.read(path, (err, result) => {
+        if (err) return reject(err);
+        return resolve(result);
+      });
+    });
+  }
+
   public read(
     path: string,
     callback: (err?: Error, result?: string) => void,
   ): void {
     const cached = this.cache[path];
-    if (cached) return callback(null, cached);
+    if (cached) return process.nextTick(() => callback(null, cached));
 
     readFile(path, (err, data) => {
       if (err) return callback(err);
